@@ -24,7 +24,7 @@ python server.py            # 打開 http://localhost:8000
 | 用途 | 預設 | 為什麼 |
 | --- | --- | --- |
 | 店員 Maya（每句話都會呼叫） | `PROVIDER=ollama`，本機 qwen2.5:7b | 免費，沒有速率限制 |
-| 評分 Agent（場景結束呼叫一次） | `EVAL_PROVIDER=cloud`，雲端模型（例如 Groq、Gemini） | 只呼叫一次，用比較準的模型 |
+| 評分 Agent（場景結束呼叫一次） | `EVAL_PROVIDER=ollama`，本機 qwen2.5:7b | 目前全部在本機跑；之後改成雲端（見下一步） |
 
 標題畫面可以切換店員要用哪個模型。雲端可以用任何 OpenAI 相容的服務，設定 `LLM_BASE_URL`、`LLM_API_KEY`、`MODEL` 三行即可，範例見 `.env.example`。
 
@@ -96,6 +96,7 @@ web/：galgame 畫面（SVG 立繪、打字機對話框、HUD、TTS/STT、trace 
 - 結算畫面：清單完成度、剩餘金額、評分 Agent 的分數、新單字和中文建議
 
 ## 下一步
+- **評分 Agent 改用雲端模型**：申請 Groq 或 Gemini 的 key，設定 `EVAL_PROVIDER=cloud`，店員維持 Ollama。整場遊戲只多一次雲端呼叫，用來改善 7B 評分偏寬鬆、建議太少的問題；也可以用 `replay.py cloud` 比較雲端店員的表現
 - 把 5 個工具包成 MCP server
 - 模擬玩家 Agent：自動扮演英文程度不同的留學生，產生新的測試劇本
 - 接上口說教練的發音分數，加入玩家檔案（英文能力、金錢、體力）
