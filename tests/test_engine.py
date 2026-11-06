@@ -61,7 +61,7 @@ def test_tool_text_detector():
 
 
 def test_score_clamped():
-    s = clamp(Score(fluency=5, politeness=-9, accuracy=1, vocab=list("abcdefg"), tips=["x"] * 5, summary="ok"))
+    s = clamp(Score(fluency=5, politeness=-9, accuracy=1, vocab=list("abcdefg"), tips=["tip one"] * 5, summary="ok"))
     assert (s["fluency"], s["politeness"], len(s["vocab"]), len(s["tips"])) == (2, -2, 5, 3)
 
 
@@ -105,3 +105,8 @@ def test_after_checkout_tools_say_stop():
     assert "Do NOT call" in _run(w, "add_to_cart", {"product_name": "milk", "quantity": 1})
     assert _run(w, "view_cart", {}) == "Cart is empty."        # 唯讀工具還能用，避免模型卡迴圈
     assert db.money(ctx.conn) == 21.01
+
+
+def test_vocab_cleaned():
+    s = clamp(Score(fluency=0, politeness=0, accuracy=0, vocab=["_aisle", " aisle", "receipt"], tips=["把 ", "多用 please"], summary=" ok "))
+    assert s["vocab"] == ["aisle", "receipt"] and s["tips"] == ["多用 please"]

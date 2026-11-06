@@ -31,7 +31,8 @@ def clamp(score: Score) -> dict:
     """引擎端驗證：分數限制在 -2..2，字彙和建議限制數量。"""
     c = lambda v: max(-2, min(2, int(v)))
     return {"fluency": c(score.fluency), "politeness": c(score.politeness), "accuracy": c(score.accuracy),
-            "vocab": [v for v in score.vocab if v][:5], "tips": score.tips[:3], "summary": score.summary}
+            "vocab": list(dict.fromkeys(w for v in score.vocab if (w := v.strip(" _-'\"`"))))[:5],
+            "tips": [t.strip() for t in score.tips if len(t.strip()) > 3][:3], "summary": score.summary.strip()}
 
 
 async def evaluate(model, transcript: list[tuple[str, str]], outcome: dict) -> dict | None:
