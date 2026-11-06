@@ -1,12 +1,9 @@
 """遊戲資料：商品、玩家、購物車、購物清單。價格和庫存只存在這裡，LLM 改不到。"""
 import sqlite3
-from pathlib import Path
-
-DB_PATH = Path(__file__).with_name("game.db")
 
 # name, aliases（逗號分隔）, aisle, price, unit, stock
 PRODUCTS = [
-    ("2% milk", "milk,whole milk,dairy milk", "Aisle 5 (dairy)", 4.29, "1 gallon", 8),
+    ("2% milk", "milk,whole milk,dairy milk,regular milk", "Aisle 5 (dairy)", 4.29, "1 gallon", 8),
     ("oat milk", "oatmilk,plant milk", "Aisle 5 (dairy)", 5.49, "half gallon", 0),
     ("eggs", "egg,a dozen eggs,dozen eggs", "Aisle 5 (dairy)", 3.99, "a dozen", 6),
     ("whole wheat bread", "bread,toast,loaf", "Aisle 2 (bakery)", 3.49, "1 loaf", 5),
@@ -28,11 +25,10 @@ LIST_WORDING = {"2% milk": "milk", "eggs": "a dozen eggs", "whole wheat bread": 
 START_MONEY = 25.00
 
 
-def connect(reset: bool = False) -> sqlite3.Connection:
-    if reset and DB_PATH.exists():
-        DB_PATH.unlink()
+def connect(path: str = ":memory:") -> sqlite3.Connection:
+    """每場遊戲一個獨立的資料庫（預設在記憶體裡），網頁上多人同時玩也不會互相干擾。"""
     # Agents SDK 會在另一個執行緒跑工具，所以要允許跨執行緒使用
-    conn = sqlite3.connect(DB_PATH, check_same_thread=False)
+    conn = sqlite3.connect(path, check_same_thread=False)
     conn.row_factory = sqlite3.Row
     conn.executescript("""
     CREATE TABLE IF NOT EXISTS products(
@@ -50,3 +46,18 @@ def connect(reset: bool = False) -> sqlite3.Connection:
         conn.execute("INSERT INTO player(id,money) VALUES(1,?)", (START_MONEY,))
         conn.commit()
     return conn
+
+
+def money(conn) -> float:
+    return conn.execute("SELECT money FROM player WHERE id=1").fetchone()["money"]
+
+
+def bought(conn) -> dict:
+    return {r["name"]: r["q"] for r in conn.execute(
+        """SELECT p.name, SUM(u.qty) q FROM purchases u
+           JOIN products p ON p.id=u.product_id GROUP BY p.name""")}
+
+
+def cart_qty(conn) -> dict:
+    return {r["name"]: r["qty"] for r in conn.execute(
+        "SELECT p.name, c.qty FROM cart c JOIN products p ON p.id=c.product_id")}
