@@ -24,9 +24,11 @@ python server.py            # 打開 http://localhost:8000
 | 用途 | 預設 | 為什麼 |
 | --- | --- | --- |
 | 店員 Maya（每句話都會呼叫） | `PROVIDER=ollama`，本機 qwen2.5:7b | 免費，沒有速率限制 |
-| 評分 Agent（場景結束呼叫一次） | `EVAL_PROVIDER=cloud`，GitHub Models gpt-4o-mini | 只呼叫一次，用比較準的模型 |
+| 評分 Agent（場景結束呼叫一次） | `EVAL_PROVIDER=cloud`，雲端模型（例如 Groq、Gemini） | 只呼叫一次，用比較準的模型 |
 
-標題畫面可以切換店員要用哪個模型。雲端可以用任何 OpenAI 相容的服務，設定 `LLM_BASE_URL`、`LLM_API_KEY`、`MODEL` 三行即可。
+標題畫面可以切換店員要用哪個模型。雲端可以用任何 OpenAI 相容的服務，設定 `LLM_BASE_URL`、`LLM_API_KEY`、`MODEL` 三行即可，範例見 `.env.example`。
+
+> ⚠️ GitHub Models 已在 2026-07-30 停止服務，`models.github.ai` 現在不管什麼請求都只回純文字 `OK`。SDK 會報 `'tuple' object has no attribute 'choices'`，看到這個錯誤就是網址失效了。
 
 ## 架構
 
