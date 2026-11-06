@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Study Abroad: Maple Corner Market</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script type="module" src="app.js"></script>
+</head>
+<body>
+  <main id="stage" aria-label="Maple Corner Market">
+    <div id="bg" class="layer"></div>
+    <div id="maya" class="layer"></div>
+    <div id="counter" class="layer"></div>
+    <div class="layer vignette"></div>
+
+    <!-- HUD -->
+    <aside id="hud" class="panel">
+      <button id="hudToggle" class="hud-toggle" type="button" aria-expanded="true" title="收合 / 展開">📋</button>
+      <div class="hud-body">
+        <section class="hud-sec">
+          <h2>購物清單 <span class="en">Shopping list</span></h2>
+          <ul id="shopList" class="shop-list"></ul>
+        </section>
+        <section class="hud-sec money-row">
+          <span class="money-label">💵 錢包 <span class="en">Wallet</span></span>
+          <span id="money" class="money">$0.00</span>
+        </section>
+        <section class="hud-sec">
+          <h2>🛒 購物車 <span class="en">Cart</span> <span id="paidBadge" class="badge" hidden>已結帳 Paid</span></h2>
+          <table class="cart"><tbody id="cartBody"></tbody></table>
+          <div class="cart-total"><span>合計 Total</span><span id="cartTotal">$0.00</span></div>
+        </section>
+        <button id="endBtn" class="btn btn-end" type="button">🚪 離開超市 <span class="en">End scene</span></button>
+      </div>
+    </aside>
+
+    <!-- Trace / dev panel -->
+    <aside id="trace" class="panel trace" hidden>
+      <header class="trace-head">
+        <strong>🛠 Trace</strong>
+        <span id="tokInfo" class="tok">tokens · turn 0 · total 0</span>
+        <button id="traceClear" class="mini" type="button">清除</button>
+        <button id="traceClose" class="mini" type="button" title="收合 (`)">✕</button>
+      </header>
+      <div id="traceList" class="trace-list"></div>
+    </aside>
+
+    <!-- Dialogue -->
+    <section id="dialog" class="dialog" aria-live="polite">
+      <div id="nameplate" class="nameplate maya">Maya</div>
+      <div id="dlgText" class="dlg-text"></div>
+      <div id="nextMark" class="next-mark" hidden>▼</div>
+      <nav class="quick-menu">
+        <button id="logBtn" type="button" title="對話紀錄 Backlog">LOG</button>
+        <button id="ttsBtn" type="button" title="語音朗讀 Voice" aria-pressed="false">🔇 VOICE</button>
+        <button id="traceBtn" type="button" title="開發者面板 Trace (`)">🛠</button>
+      </nav>
+    </section>
+
+    <form id="inputBar" class="input-bar" autocomplete="off">
+      <button id="micBtn" class="btn-round mic" type="button" title="按住說話 Hold to talk">🎤</button>
+      <input id="textIn" type="text" placeholder="用英文跟 Maya 說話… Say something in English" maxlength="400" enterkeyhint="send">
+      <button id="sendBtn" class="btn btn-send" type="submit">Send ➤</button>
+    </form>
+    <div id="hint" class="hint" hidden>按「離開超市」看結果 <span class="en">Press “End scene” to see your results</span></div>
+
+    <!-- Title -->
+    <section id="title" class="screen title-screen">
+      <div class="title-card">
+        <div id="titleLeaf" class="title-leaf"></div>
+        <h1>Study Abroad<span>Maple Corner Market</span></h1>
+        <p class="subtitle">留學生活｜超市篇</p>
+        <ul class="howto">
+          <li>🗣️ 用<b>英文</b>和店員 Maya 對話 — <span class="en">talk in English</span></li>
+          <li>📝 買齊<b>購物清單</b>上的所有東西 — <span class="en">buy everything on the list</span></li>
+          <li>💵 不要超出<b>預算</b>，最後記得結帳 — <span class="en">stay within budget &amp; check out</span></li>
+        </ul>
+        <label class="provider">
+          <span>模型 Model</span>
+          <select id="providerSel" disabled><option>連線中… Connecting</option></select>
+        </label>
+        <button id="startBtn" class="btn btn-start" type="button" disabled>Start ▶</button>
+        <p id="connStatus" class="conn-status">連線中… Connecting</p>
+      </div>
+    </section>
+
+    <!-- Backlog -->
+    <section id="logOverlay" class="screen overlay" hidden>
+      <div class="log-card panel">
+        <header><h2>對話紀錄 <span class="en">Backlog</span></h2><button id="logClose" class="mini" type="button">✕</button></header>
+        <div id="logList" class="log-list"></div>
+      </div>
+    </section>
+
+    <!-- Evaluating -->
+    <section id="evaluating" class="screen overlay" hidden>
+      <div class="eval-card"><div class="spinner"></div><p>評分中… <span class="en">Evaluating</span></p></div>
+    </section>
+
+    <!-- Result -->
+    <section id="result" class="screen overlay" hidden>
+      <div id="resultCard" class="result-card"></div>
+    </section>
+
+    <div id="connBanner" class="conn-banner" hidden>
+      ⚠️ 連線中斷 <span class="en">Disconnected</span>
+      <button id="reconnectBtn" class="btn mini-btn" type="button">重新連線 Reconnect</button>
+    </div>
+    <div id="toasts" class="toasts" aria-live="assertive"></div>
+  </main>
+</body>
+</html>
