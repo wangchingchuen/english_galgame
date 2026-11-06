@@ -37,7 +37,7 @@ class Provider:
 
 def providers() -> dict[str, Provider]:
     om = os.getenv("OLLAMA_MODEL", "qwen2.5:7b")
-    cm = os.getenv("MODEL", "openai/gpt-4o-mini")
+    cm = os.getenv("MODEL", "雲端模型")
     return {
         "ollama": Provider("ollama", f"Ollama {om}（本機）",
                            os.getenv("OLLAMA_BASE_URL", "http://localhost:11434/v1"), "ollama", om),
