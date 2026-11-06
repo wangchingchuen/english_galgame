@@ -97,6 +97,10 @@ web/：galgame 畫面（SVG 立繪、打字機對話框、HUD、TTS/STT、trace 
 
 ## 下一步
 - **評分 Agent 改用雲端模型**：申請 Groq 或 Gemini 的 key，設定 `EVAL_PROVIDER=cloud`，店員維持 Ollama。整場遊戲只多一次雲端呼叫，用來改善 7B 評分偏寬鬆、建議太少的問題；也可以用 `replay.py cloud` 比較雲端店員的表現
+- **語音功能（目前還不完善）**
+  - Maya 的聲音要更像真人：現在用的是瀏覽器內建的 `speechSynthesis`，聽起來像機器。打算改成本機的神經網路 TTS（例如 Kokoro、Piper）由 server 產生音檔，或優先挑 Edge 的 Natural 語音，並依 `emotion` 調整語速和音調
+  - 語音輸入改用本機 Whisper：現在的 Web Speech API 只有 Chrome/Edge 支援，而且要連網
+  - 說話時的嘴型跟實際音訊同步，不再用固定節奏開合
 - 把 5 個工具包成 MCP server
 - 模擬玩家 Agent：自動扮演英文程度不同的留學生，產生新的測試劇本
 - 接上口說教練的發音分數，加入玩家檔案（英文能力、金錢、體力）
